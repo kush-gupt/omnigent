@@ -22,6 +22,14 @@ tap routing back into the SPA. OIDC sign-in happens outside the web view (see
 user agents work. It does not implement APNs, background polling, or localhost
 proxy/CORS behavior.
 
+## Apple Watch
+
+`OmnigentWatch` lists sessions, starts new ones where a recent session ran, approves binary
+prompts, streams replies, and takes typed or dictated replies (server dictation when
+`dictation_available`, else the system's). After each page load the phone sends the server's API root and the cookies scoped to
+it (`WatchBridge`); the watch keeps them in its Keychain and calls the API directly. Signing
+out on the phone signs the watch out. Run the `OmnigentWatch` scheme on a paired simulator.
+
 ## Databricks OAuth
 
 Workspace connections use native OAuth, isolated persistent WebKit stores, bounded
