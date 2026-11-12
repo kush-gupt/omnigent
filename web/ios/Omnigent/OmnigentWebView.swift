@@ -806,6 +806,7 @@ struct OmnigentWebView: UIViewRepresentable {
       do {
         let cleanup = try workspaceBootstrap.beginSignOut(context: context, store: webStore)
         let callback = parent.signedOut
+        WatchBridge.shared.signOut()
         effectiveOrigin = nil
         workspaceSession = nil
         detach()
@@ -1176,6 +1177,7 @@ struct OmnigentWebView: UIViewRepresentable {
       }
       let message = OidcWebSession.signedOutMessage(host: connection.host, complete: complete)
       let signedOut = parent.serverSignedOut
+      WatchBridge.shared.signOut()
       let loadFailed = parent.loadFailed
       let initialURL = parent.initialURL
       effectiveOrigin = nil
@@ -1455,6 +1457,9 @@ struct OmnigentWebView: UIViewRepresentable {
       if pinnedOrigin != nil, webView.url?.omnigentOrigin == pinnedOrigin {
         (webView as? AccessoryFreeWebView)?.emitKeyboardViewport(force: true)
         webView.evaluateJavaScript(WorkspaceChromeScript.source)
+        WatchBridge.shared.sync(
+          serverURL: parent.serverURL ?? pinnedURL,
+          cookieStore: webView.configuration.websiteDataStore.httpCookieStore)
         parent.loadSucceeded()
       }
     }
